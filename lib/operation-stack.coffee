@@ -68,17 +68,7 @@ class OperationStack
       @vimState.emitter.emit 'will-execute-operation', @operation
       @execute()
 
-  suspendExecute: ->
-    @executionSuspended = true
-
-  unsuspendExecute: ->
-    @executionSuspended = false
-
-  isExecuteSuspended: ->
-    @executionSuspended
-
   execute: ->
-    return if @isExecuteSuspended()
     execution = @operation.execute()
     finalize = =>
       @vimState.emitter.emit 'did-execute-operation', @operation
@@ -120,7 +110,6 @@ class OperationStack
 
   reset: ->
     @stack = []
-    @executionSuspended = false
     @subscriptions?.dispose()
     @subscriptions = new CompositeDisposable
 

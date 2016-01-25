@@ -110,13 +110,6 @@ class Base
   cancelOperation: ->
     @vimState.operationStack.cancel()
 
-  suspendExecuteOperation: ->
-    @vimState.operationStack.suspendExecute()
-
-  unsuspendExecuteOperation: ->
-    @vimState.operationStack.unsuspendExecute()
-    @vimState.operationStack.execute()
-
   processOperation: ->
     @vimState.operationStack.process()
 
