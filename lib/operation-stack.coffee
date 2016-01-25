@@ -78,11 +78,17 @@ class OperationStack
     @executionSuspended
 
   execute: ->
-    @operation.execute()
     return if @isExecuteSuspended()
-    @vimState.emitter.emit 'did-execute-operation', @operation
-    @record(@operation) if @operation.isRecordable()
-    @finish()
+    execution = @operation.execute()
+    finalize = =>
+      @vimState.emitter.emit 'did-execute-operation', @operation
+      @record(@operation) if @operation.isRecordable()
+      @finish()
+
+    if execution instanceof Promise
+      execution.then -> finalize()
+    else
+      finalize()
 
   cancel: ->
     unless @vimState.isMode('visual') or @vimState.isMode('insert')
